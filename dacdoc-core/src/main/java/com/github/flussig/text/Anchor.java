@@ -9,6 +9,7 @@ import com.github.flussig.exception.DacDocParseException;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -113,7 +114,7 @@ public final class Anchor {
                 break;
         }
 
-        return currentFile.getParentFile().toPath().relativize(Path.of(dacdocResourceDirectory.toString(), imageFileName)).toString();
+        return currentFile.getParentFile().toPath().relativize(Paths.get(dacdocResourceDirectory.toString(), imageFileName)).toString();
     }
 
     public static String getCheckResultImage(
