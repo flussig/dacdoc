@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <artifactId>dacdoc</artifactId>
-        <groupId>org.flussig.documentation</groupId>
+        <groupId>com.github.flussig</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -29,7 +29,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.flussig.documentation</groupId>
+            <groupId>com.github.flussig</groupId>
             <artifactId>dacdoc-core</artifactId>
             <version>${project.version}</version>
         </dependency>
