@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,7 +62,7 @@ public class UrlCheck extends SingleExecutionCheck {
 
     private CheckResult executeRelativePath(String uri) {
         try {
-            Path testPath = Path.of(file.getParentFile().getPath(), uri);
+            Path testPath = Paths.get(file.getParentFile().getPath(), uri);
 
             File testFile = new File(testPath.toUri());
 

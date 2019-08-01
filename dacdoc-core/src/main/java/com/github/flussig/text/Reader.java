@@ -59,7 +59,7 @@ public class Reader {
             Set<Anchor> anchors = new HashSet<>();
             result.put(f, anchors);
 
-            String content = Files.readString(f.toPath());
+            String content = new String(Files.readAllBytes(f.toPath()));
 
             // extract all DACDOC placeholders
             Matcher dacdocPlaceholderMatcher = anchorPlaceholderPattern.matcher(content);
@@ -88,7 +88,7 @@ public class Reader {
         Map<File, String> fileContents = files.stream()
                 .collect(Collectors.toMap(f -> f, f -> {
                     try {
-                        return Files.readString(f.toPath());
+                        return new String(Files.readAllBytes(f.toPath()));
                     } catch(IOException e) {
                         return null;
                     }
@@ -153,7 +153,7 @@ public class Reader {
 
                 Optional<FileAnchorTuple> subTuple = tuples.stream().filter(t -> t.getAnchor().getId().equals(id)).findFirst();
 
-                if(subTuple.isEmpty()) {
+                if(!subTuple.isPresent()) {
                     subCheck = Check.unknownCheck;
                 } else {
                     subCheck = subTuple.get().getAnchor().getCheck();

@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -64,14 +65,14 @@ public class DacDocCompile
             Map<File, Set<Anchor>> parsedAnchors = Reader.parseFiles(readmeFiles);
 
             // replace DACDOC placeholders with indicators of check results
-            Path dacdocResources = Path.of(allSourceDir.getAbsolutePath(), Constants.DACDOC_RESOURCES);
+            Path dacdocResources = Paths.get(allSourceDir.getAbsolutePath(), Constants.DACDOC_RESOURCES);
             getLog().info( String.format("DacDoc resource directory: %s", dacdocResources));
 
             Map<File, String> processedFiles = Reader.getTransformedFiles(parsedAnchors, dacdocResources);
 
             // add indicators of check results to each readme file
-            for(var fileContent: processedFiles.entrySet()) {
-                Files.writeString(fileContent.getKey().toPath(), fileContent.getValue());
+            for(Map.Entry<File, String> fileContent: processedFiles.entrySet()) {
+                Files.write(fileContent.getKey().toPath(), fileContent.getValue().getBytes());
             }
         } catch(Exception e) {
             throw new MojoExecutionException("exception while executing dacdoc-maven-plugin compile goal " + e.getMessage());
@@ -85,10 +86,11 @@ public class DacDocCompile
         List<String> indicatorFileNames = Arrays.asList(Constants.GREY_IND, Constants.GREEN_IND, Constants.ORANGE_IND, Constants.RED_IND);
 
         for(String indicatorFileName: indicatorFileNames) {
-            Path outPath = Path.of(destDacDocResourceDirectory.getAbsolutePath(), indicatorFileName);
+            Path outPath = Paths.get(destDacDocResourceDirectory.getAbsolutePath(), indicatorFileName);
 
             try(InputStream stream = getClass().getClassLoader().getResource(indicatorFileName).openStream()) {
-                byte[] resourceBytes = stream.readAllBytes();
+                byte[] resourceBytes = new byte[stream.available()];
+                stream.read(resourceBytes);
                 Files.write(outPath, resourceBytes);
                 getLog().info( String.format("resource file written: ", outPath));
             } catch(Exception e) {
@@ -98,7 +100,7 @@ public class DacDocCompile
     }
 
     private File createDacDocResourceDir(File baseDir) {
-        File destDacDocResourceDirectory = Path.of(baseDir.getAbsolutePath(), Constants.DACDOC_RESOURCES).toFile();
+        File destDacDocResourceDirectory = Paths.get(baseDir.getAbsolutePath(), Constants.DACDOC_RESOURCES).toFile();
         getLog().info( String.format("DacDoc resource directory: %s", destDacDocResourceDirectory.getAbsolutePath()));
 
         if(!destDacDocResourceDirectory.exists()) {

@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
@@ -81,7 +82,7 @@ public class ReaderTest {
                 .getResource("README.md")
                 .getFile());
 
-        Path parentDir = Path.of(readme.getParentFile().getParentFile().toString(), "classes");
+        Path parentDir = Paths.get(readme.getParentFile().getParentFile().toString(), "classes");
 
         Set<File> files = new HashSet<>();
         files.add(readme);
