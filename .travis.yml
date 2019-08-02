@@ -6,6 +6,7 @@ deploy:
   provider: releases
   api_key:
     secure: nn5LNw6hId7n9aHfwnfjvc6nj3gezjlNCa2qtg/ryptmWKILOs4I+eHinvM8Db4BqUCgoYFGoLDEMg25b0Z5uQCfnwDcpB7mDmVEZIdkRBZEW3otrgizgZ0rcnQ4022EsO/Xe515C1Ao7AgTDWzedsgs8c50+Cw8ajFRZcCu3BUQdesVPAgmGKgHoPw5CW+Tz2bVteFQXIVNkImFeCiMRT23HpQd2EP9lqj2xBw7hv3TUERXU6az9KtFXe1ZQrnaQfTAW4/GTm9OGUeoP2Ab+442zuCxrWF4jGxqCDWADFOBl5+vmBKy0w0ebl4foO+mfhIMlBlY0+Jmv1Oo4RYGFC2RWPqZyEmeJNudyy05LXAK/tGqpgf6K+ic6U8pNJOa6DzVkyQ13dIO9kRCE+yPJ68eE9YXXF0497Qb8KQCl3Bltlb6K5XlMmM6FBu6228Lq7RZYha1aeeBmxbRb15AN+QtxYbbEFTEUfaQODMlEk2kzcaimdWDAcVK0JEx0hm+7tDG+jT7jiXr6IPrs4EXJsZG9A5XVejA/lmqkqcpkruYDnEtaffzOK9rcuxKdrSaJ4ErJ1M7vgwXfeCbmyEFm+sXBwVfxwsciwcjiTm8JemsWwTkhaUzUMFigmIw2R4qvcBgJs1mfsgKRK4uxMBqh/puqh/47e0+OaSsWFI35NQ=
+  skip_cleanup: true
   file: dacdoc-maven-plugin/target/dacdoc-maven-plugin-$project-version.jar
   on:
     repo: flussig/dacdoc
