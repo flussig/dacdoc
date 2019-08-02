@@ -43,4 +43,42 @@
       </plugin>
     </plugins>
   </build>
+
+  <!-- licenses -->
+  <licenses>
+    <license>
+      <name>GNU General Public License (GPL)</name>
+      <url>http://www.gnu.org/licenses/gpl.txt</url>
+    </license>
+  </licenses>
+
+  <!-- git urls for releases -->
+  <scm>
+    <connection>scm:git:https://github.com/flussig/dacdoc.git</connection>
+    <url>https://github.com/flussig/dacdoc</url>
+  </scm>
+
+  <!-- where to release to -->
+  <distributionManagement>
+    <site>
+      <id>api.wiki</id>
+      <url>https://github.com/flussig/dacdoc/wiki</url>
+    </site>
+
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+  <developers>
+    <developer>
+      <name>Serdar Kurbanov</name>
+      <email>serdar.kurbanov@hotmail.com</email>
+    </developer>
+  </developers>
 </project>
