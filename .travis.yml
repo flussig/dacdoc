@@ -9,3 +9,4 @@ deploy:
   file: dacdoc-maven-plugin/target/dacdoc-maven-plugin-$project-version.jar
   on:
     repo: flussig/dacdoc
+  name: $project_version
