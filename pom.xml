@@ -24,6 +24,7 @@
     <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
     <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+    <maven-release-plugin.version>2.4.2</maven-release-plugin.version>
   </properties>
 
   <dependencies>
@@ -60,6 +61,11 @@
       <artifactId>maven-gpg-plugin</artifactId>
       <version>${maven-gpg-plugin.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-release-plugin</artifactId>
+      <version>${maven-release-plugin.version}</version>
+    </dependency>
   </dependencies>
 
   <!-- licenses -->
@@ -72,6 +78,7 @@
 
   <!-- git urls for releases -->
   <scm>
+    <developerConnection>scm:git:https://github.com/flussig/dacdoc.git</developerConnection>
     <connection>scm:git:https://github.com/flussig/dacdoc.git</connection>
     <url>https://github.com/flussig/dacdoc</url>
   </scm>
@@ -181,7 +188,7 @@
             <executions>
               <execution>
                 <id>default-deploy</id>
-                <phase>install</phase>
+                <phase>deploy</phase>
                 <goals>
                   <goal>deploy</goal>
                 </goals>
@@ -235,6 +242,17 @@
                 </goals>
               </execution>
             </executions>
+          </plugin>
+
+          <!-- To update version and commit back -->
+          <plugin>
+            <artifactId>maven-release-plugin</artifactId>
+            <version>${maven-release-plugin.version}</version>
+            <configuration>
+              <tagNameFormat>v@{project.version}</tagNameFormat>
+              <autoVersionSubmodules>true</autoVersionSubmodules>
+              <releaseProfiles>release</releaseProfiles>
+            </configuration>
           </plugin>
         </plugins>
       </build>
