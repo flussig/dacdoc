@@ -77,8 +77,9 @@
   </licenses>
 
   <!-- git urls for releases -->
+  <!-- git token should be assigned by travis CI -->
   <scm>
-    <developerConnection>scm:git:https://github.com/flussig/dacdoc.git</developerConnection>
+    <developerConnection>scm:git:https://${GITHUB_TOKEN}@github.com/flussig/dacdoc.git</developerConnection>
     <connection>scm:git:https://github.com/flussig/dacdoc.git</connection>
     <url>https://github.com/flussig/dacdoc</url>
   </scm>
