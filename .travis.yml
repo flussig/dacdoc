@@ -35,7 +35,7 @@ deploy:
   name: $project_version
 
 install:
-  - if [ $TRAVIS_PULL_REQUEST == true ];
+  - if [ ! $TRAVIS_PULL_REQUEST == false ];
     then echo "build and test"; mvn --settings .maven.xml install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V;
     else echo "no build and test for non-PR";
     fi
