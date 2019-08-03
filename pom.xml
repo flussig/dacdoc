@@ -153,6 +153,11 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
+        <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.7.1</version>
+        </plugin>
         <plugin>
           <artifactId>maven-plugin-plugin</artifactId>
           <version>3.6.0</version>
@@ -181,6 +186,15 @@
               <skip>true</skip>
             </configuration>
           </plugin>
+          <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
           <!-- To release to Maven central -->
           <plugin>
             <groupId>org.sonatype.plugins</groupId>
