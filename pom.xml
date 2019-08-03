@@ -261,6 +261,7 @@
               <tagNameFormat>v@{project.version}</tagNameFormat>
               <autoVersionSubmodules>true</autoVersionSubmodules>
               <releaseProfiles>release</releaseProfiles>
+              <localCheckout>true</localCheckout>
             </configuration>
           </plugin>
         </plugins>
