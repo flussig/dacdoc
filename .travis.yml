@@ -32,9 +32,7 @@ install:
 
 ## Build and release to maven central
 script:
-  - if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "master" ]; then
-        echo "release to maven central";
-        mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease
-      else
-        echo "no release to maven for PR or non-master branches";
-      fi
+  - if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "master" ];
+    then echo "release to maven central"; mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease;
+    else echo "no release to maven for PR or non-master branches";
+    fi
