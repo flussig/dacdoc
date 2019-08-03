@@ -40,6 +40,9 @@ install:
     else echo "no build and test for non-PR";
     fi
   - if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "master" ];
-    then echo "release to maven central"; mvn release:clean release:prepare release:perform --settings .maven.xml -DskipTests=true -B -U -Prelease;
+    then echo "release to maven central"; mvn release:clean release:prepare release:perform --settings .maven.xml -DpushChanges=false -DskipTests=true -B -U -Prelease; git push —tags;
     else echo "no release to maven for PR or non-master branches";
+    fi
+  - if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "development" ];
+    then echo "release snapshot"; mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease;
     fi
