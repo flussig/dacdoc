@@ -4,7 +4,7 @@
   <groupId>com.github.flussig</groupId>
   <artifactId>dacdoc</artifactId>
   <packaging>pom</packaging>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.0.4-SNAPSHOT</version>
   <modules>
     <module>dacdoc-core</module>
     <module>dacdoc-git</module>
@@ -24,8 +24,8 @@
     <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
     <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-    <maven-release-plugin.version>2.4.2</maven-release-plugin.version>
-    <maven-scm-provider-gitexe.version>1.8.1</maven-scm-provider-gitexe.version>
+    <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+    <maven-scm-provider-gitexe.version>1.9.5</maven-scm-provider-gitexe.version>
   </properties>
 
   <dependencies>
