@@ -244,14 +244,14 @@
             </executions>
           </plugin>
 
-          <!-- To change version -->
+          <!-- To update version and commit back -->
           <plugin>
             <artifactId>maven-release-plugin</artifactId>
             <version>${maven-release-plugin.version}</version>
             <configuration>
               <tagNameFormat>v@{project.version}</tagNameFormat>
               <autoVersionSubmodules>true</autoVersionSubmodules>
-              <releaseProfiles>releases</releaseProfiles>
+              <releaseProfiles>release</releaseProfiles>
             </configuration>
           </plugin>
         </plugins>
