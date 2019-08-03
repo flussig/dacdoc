@@ -14,7 +14,7 @@ before_install:
 before_deploy:
   - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
   - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
-  - echo $project_version
+  - echo "project version $project_version"
 
 deploy:
   provider: releases
@@ -28,8 +28,13 @@ deploy:
   name: $project_version
 
 install:
-  mvn --settings .maven.xml install -DskipTests=true -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
+  mvn --settings .maven.xml install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
 
 ## Build and release to maven central
 script:
-  mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease
+  - if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "master" ]; then
+        echo "release to maven central";
+        mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease
+      else
+        echo "no release to maven for PR or non-master branches";
+      fi
