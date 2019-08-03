@@ -35,10 +35,10 @@ deploy:
   name: $project_version
 
 install:
-  mvn --settings .maven.xml install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V
-
-## Build and release to maven central
-script:
+  - if [ ! $TRAVIS_PULL_REQUEST == false ];
+    then echo "build and test"; mvn --settings .maven.xml install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V;
+    else echo "no build and test for non-PR";
+    fi
   - if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "master" ];
     then echo "release to maven central"; mvn release:clean release:prepare release:perform --settings .maven.xml -DskipTests=true -B -U -Prelease;
     else echo "no release to maven for PR or non-master branches";
