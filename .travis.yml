@@ -14,7 +14,7 @@ before_install:
 before_deploy:
   - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
   - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
-  - echo "project version $project_version"
+  - echo $project_version
 
 deploy:
   provider: releases
@@ -25,6 +25,7 @@ deploy:
   on:
     repo: flussig/dacdoc
     branch: master
+    tags: true
   name: $project_version
 
 install:
@@ -33,6 +34,6 @@ install:
 ## Build and release to maven central
 script:
   - if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "master" ];
-    then echo "release to maven central"; mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease;
+    then echo "release to maven central"; mvn release:clean release:prepare release:perform --settings .maven.xml -DskipTests=true -B -U -Prelease;
     else echo "no release to maven for PR or non-master branches";
     fi
