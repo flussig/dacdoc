@@ -33,10 +33,8 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Compile goal:
@@ -126,20 +124,31 @@ public class DacDocCompile
     {
         try
         {
-            List classpathElements = project.getCompileClasspathElements();
+            Set<String> classpathElements = new HashSet<>(project.getCompileClasspathElements());
             classpathElements.add(project.getBuild().getOutputDirectory());
             classpathElements.add(project.getBuild().getTestOutputDirectory());
+            getLog().info(String.format("classpath elements: %s", classpathElements));
+
+            Set<URL> urlsSet = classpathElements.stream()
+                    .map(cpe -> {
+                        try {
+                            return Paths.get(cpe).toUri().toURL();
+                        } catch(Exception e) {
+                            getLog().error(String.format("couldn't use classpath %s. %s", cpe, e.getMessage()));
+                            return null;
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .peek(url -> getLog().info(String.format("loaded classpath url: %s", url)))
+                    .collect(Collectors.toSet());
             URL urls[] = new URL[classpathElements.size()];
-            for (int i = 0; i < classpathElements.size(); ++i)
-            {
-                urls[i] = new URL(new File((String) classpathElements.get( i )).getAbsolutePath());
-                getLog().info(String.format("loaded classpath url: %s", urls[i]));
-            }
-            return new URLClassLoader( urls, this.getClass().getClassLoader());
+
+            urlsSet.toArray(urls);
+            return new URLClassLoader(urls, this.getClass().getClassLoader());
         }
         catch ( Exception e )
         {
-            getLog().debug( "Couldn't get the classloader." );
+            getLog().error( "Couldn't get the classloader. " + e.getMessage());
             return this.getClass().getClassLoader();
         }
     }
