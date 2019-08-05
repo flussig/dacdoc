@@ -84,7 +84,7 @@ public class DacDocCompile
 
         // put all check classes to registry
         for(Class<? extends Check> checkClass: allUserCheckClasses) {
-            String checkName = Optional.ofNullable(checkClass.getDeclaredAnnotation(CheckMetadata.class)).map(CheckMetadata::id).orElse(checkClass.getName());
+            String checkName = Optional.ofNullable(checkClass.getAnnotation(CheckMetadata.class)).map(CheckMetadata::id).orElse(checkClass.getSimpleName());
 
             CheckRegistry.checkRegistry.put(checkName, checkClass);
 
