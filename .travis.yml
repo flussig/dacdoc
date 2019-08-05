@@ -31,7 +31,6 @@ deploy:
   on:
     repo: flussig/dacdoc
     branch: master
-    tags: true
   name: $project_version
 
 install:
