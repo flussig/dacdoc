@@ -60,7 +60,7 @@ public class DacDocCompile
         try {
             loadCustomChecks();
 
-            //transformDocumentationFiles();
+            transformDocumentationFiles();
         } catch(Exception e) {
             throw new MojoExecutionException("exception while executing dacdoc-maven-plugin compile goal " + e.getMessage());
         }
