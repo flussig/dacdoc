@@ -16,16 +16,20 @@ package com.github.flussig;
  * limitations under the License.
  */
 
+import com.github.flussig.exception.DacDocException;
 import com.github.flussig.text.Anchor;
 import com.github.flussig.text.Reader;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,36 +50,44 @@ public class DacDocCompile
     @Parameter(readonly = true, defaultValue = "${project.basedir}")
     private File srcDirectory;
 
+    @Parameter(defaultValue = "${project}")
+    public MavenProject project;
+
     public void execute() throws MojoExecutionException
     {
         try {
-            File allSourceDir = srcDirectory;
-
-            getLog().info( String.format("Build directory: %s", allSourceDir.getAbsolutePath()));
-
-            // prepare source directory: create resource folder with images for check results (if not exists)
-            prepareResourceDirectory(allSourceDir);
-
-            // collect all readme files
-            Set<File> readmeFiles = Reader.findMarkdownFiles(allSourceDir.toPath());
-
-            getLog().info( String.format("Readme files: %s", readmeFiles));
-
-            // parse and find all placeholders
-            Map<File, Set<Anchor>> parsedAnchors = Reader.parseFiles(readmeFiles);
-
-            // replace DACDOC placeholders with indicators of check results
-            Path dacdocResources = Paths.get(allSourceDir.getAbsolutePath(), Constants.DACDOC_RESOURCES);
-            getLog().info( String.format("DacDoc resource directory: %s", dacdocResources));
-
-            Map<File, String> processedFiles = Reader.getTransformedFiles(parsedAnchors, dacdocResources);
-
-            // add indicators of check results to each readme file
-            for(Map.Entry<File, String> fileContent: processedFiles.entrySet()) {
-                Files.write(fileContent.getKey().toPath(), fileContent.getValue().getBytes());
-            }
+            getClassLoader(this.project);
+            //transformDocumentationFiles();
         } catch(Exception e) {
             throw new MojoExecutionException("exception while executing dacdoc-maven-plugin compile goal " + e.getMessage());
+        }
+    }
+
+    private void transformDocumentationFiles() throws IOException, DacDocException {
+        File allSourceDir = srcDirectory;
+
+        getLog().info( String.format("Build directory: %s", allSourceDir.getAbsolutePath()));
+
+        // prepare source directory: create resource folder with images for check results (if not exists)
+        prepareResourceDirectory(allSourceDir);
+
+        // collect all readme files
+        Set<File> readmeFiles = Reader.findMarkdownFiles(allSourceDir.toPath());
+
+        getLog().info( String.format("Readme files: %s", readmeFiles));
+
+        // parse and find all placeholders
+        Map<File, Set<Anchor>> parsedAnchors = Reader.parseFiles(readmeFiles);
+
+        // replace DACDOC placeholders with indicators of check results
+        Path dacdocResources = Paths.get(allSourceDir.getAbsolutePath(), Constants.DACDOC_RESOURCES);
+        getLog().info( String.format("DacDoc resource directory: %s", dacdocResources));
+
+        Map<File, String> processedFiles = Reader.getTransformedFiles(parsedAnchors, dacdocResources);
+
+        // add indicators of check results to each readme file
+        for(Map.Entry<File, String> fileContent: processedFiles.entrySet()) {
+            Files.write(fileContent.getKey().toPath(), fileContent.getValue().getBytes());
         }
     }
 
@@ -108,5 +120,27 @@ public class DacDocCompile
             getLog().info( String.format("DacDoc resource directory created: %s", destDacDocResourceDirectory.getAbsolutePath()));
         }
         return destDacDocResourceDirectory;
+    }
+
+    private ClassLoader getClassLoader(MavenProject project)
+    {
+        try
+        {
+            List classpathElements = project.getCompileClasspathElements();
+            classpathElements.add(project.getBuild().getOutputDirectory());
+            classpathElements.add(project.getBuild().getTestOutputDirectory());
+            URL urls[] = new URL[classpathElements.size()];
+            for (int i = 0; i < classpathElements.size(); ++i)
+            {
+                urls[i] = new URL(new File((String) classpathElements.get( i )).getAbsolutePath());
+                getLog().info(String.format("loaded classpath url: %s", urls[i]));
+            }
+            return new URLClassLoader( urls, this.getClass().getClassLoader());
+        }
+        catch ( Exception e )
+        {
+            getLog().debug( "Couldn't get the classloader." );
+            return this.getClass().getClassLoader();
+        }
     }
 }
