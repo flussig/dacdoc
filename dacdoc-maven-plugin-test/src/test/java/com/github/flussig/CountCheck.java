@@ -16,7 +16,12 @@ public class CountCheck extends SingleExecutionCheck {
 
     @Override
     public CheckResult performCheck() {
-        List<String> lines = Stream.of(argument.split("\n")).filter(s -> s != null && !s.isEmpty()).collect(Collectors.toList());
+        List<String> lines = Stream.of(argument.split("\n"))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+        System.out.println(lines.size());
 
         CheckStatus checkStatus;
         if(lines.size() == 4) {

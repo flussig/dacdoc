@@ -3,10 +3,8 @@ package com.github.flussig.check;
 
 import java.lang.annotation.*;
 
-@Documented
-@Retention( RetentionPolicy.CLASS )
+@Retention( RetentionPolicy.RUNTIME )
 @Target( { ElementType.TYPE } )
-@Inherited
 public @interface CheckMetadata {
     String id();
 }
