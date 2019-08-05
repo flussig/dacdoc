@@ -35,5 +35,5 @@ public abstract class SingleExecutionCheck extends Check {
     /**
      * actual method to perform result
      */
-    abstract CheckResult performCheck();
+    public abstract CheckResult performCheck();
 }

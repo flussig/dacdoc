@@ -75,8 +75,8 @@ public class DacDocCompile
         List<Class<? extends Check>> outputClasses = classFinder.findAllMatchingTypes(outputDir, Check.class);
         List<Class<? extends Check>> outputTestClasses = classFinder.findAllMatchingTypes(testOutputDir, Check.class);
 
-        getLog().info(String.format("outputClasses: %s", outputClasses));
-        getLog().info(String.format("outputTestClasses: %s", outputTestClasses));
+        getLog().info(String.format("outputClasses extending DacDoc check: %s", outputClasses));
+        getLog().info(String.format("outputTestClasses extending DacDoc check: %s", outputTestClasses));
 
         Set<Class<? extends Check>> allUserCheckClasses = new HashSet<>();
         allUserCheckClasses.addAll(outputClasses);
