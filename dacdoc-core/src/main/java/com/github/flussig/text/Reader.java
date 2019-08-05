@@ -1,11 +1,8 @@
 package com.github.flussig.text;
 
-import com.github.flussig.check.Check;
+import com.github.flussig.check.*;
 import com.github.flussig.exception.DacDocParseException;
 import com.github.flussig.Constants;
-import com.github.flussig.check.CheckResult;
-import com.github.flussig.check.CompositeCheck;
-import com.github.flussig.check.UrlCheck;
 import com.github.flussig.exception.DacDocException;
 
 import java.io.File;
@@ -179,8 +176,14 @@ public class Reader {
             check = new CompositeCheck(new ArrayList());
         } else {
             // for primitive type: define type of check and add it
-            if(anchor.getTestId().equals(Constants.DEFAULT_TEST_ID)) {
-                check = new UrlCheck(anchor.getArgument(), file);
+            if(CheckRegistry.checkRegistry.containsKey(anchor.getTestId())) {
+                Class<? extends Check> checkClass = CheckRegistry.checkRegistry.get(anchor.getTestId());
+                try {
+                    check = checkClass.getDeclaredConstructor(String.class, File.class).newInstance(anchor.getArgument(), file);
+                } catch (Exception ex) {
+                    check = Check.unknownCheck;
+                    // TODO: throw specific error
+                }
             } else {
                 check = Check.unknownCheck;
             }

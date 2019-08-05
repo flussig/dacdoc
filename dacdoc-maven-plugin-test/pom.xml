@@ -5,7 +5,7 @@
     <parent>
         <artifactId>dacdoc</artifactId>
         <groupId>com.github.flussig</groupId>
-        <version>0.0.4-SNAPSHOT</version>
+        <version>0.0.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -20,5 +20,23 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.flussig</groupId>
+            <artifactId>dacdoc-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.github.flussig</groupId>
+                    <artifactId>dacdoc-maven-plugin</artifactId>
+                    <version>${project.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
