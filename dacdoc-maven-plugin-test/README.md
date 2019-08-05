@@ -42,3 +42,11 @@ List:
 some block of code here
 ```
 }(test=non-existing-test)!
+
+# Custom defined check
+!DACDOC{
+* line1
+* line2
+* line3
+* line4
+}(test=countCheck)!

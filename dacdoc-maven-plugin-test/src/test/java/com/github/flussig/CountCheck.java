@@ -4,8 +4,11 @@ import com.github.flussig.check.*;
 
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-@CheckMetadata(id = "counterCheck")
+@CheckMetadata(id = "countCheck")
 public class CountCheck extends SingleExecutionCheck {
     public CountCheck(String argument, File file) {
         super(argument, file);
@@ -13,10 +16,10 @@ public class CountCheck extends SingleExecutionCheck {
 
     @Override
     public CheckResult performCheck() {
-        String[] lines = argument.split("\n");
+        List<String> lines = Stream.of(argument.split("\n")).filter(s -> s != null && !s.isEmpty()).collect(Collectors.toList());
 
         CheckStatus checkStatus;
-        if(lines.length == 4) {
+        if(lines.size() == 4) {
             checkStatus = CheckStatus.GREEN;
         } else {
             checkStatus = CheckStatus.RED;
