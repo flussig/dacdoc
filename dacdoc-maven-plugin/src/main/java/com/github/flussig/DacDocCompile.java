@@ -16,6 +16,9 @@ package com.github.flussig;
  * limitations under the License.
  */
 
+import com.github.flussig.check.Check;
+import com.github.flussig.check.CheckMetadata;
+import com.github.flussig.check.CheckRegistry;
 import com.github.flussig.exception.DacDocException;
 import com.github.flussig.text.Anchor;
 import com.github.flussig.text.Reader;
@@ -55,18 +58,37 @@ public class DacDocCompile
     public void execute() throws MojoExecutionException
     {
         try {
-            JavaClassFinder classFinder = new JavaClassFinder(getClassLoader(this.project));
-            String outputDir = project.getBuild().getOutputDirectory();
-            String testOutputDir = project.getBuild().getTestOutputDirectory();
+            loadCustomChecks();
 
-            List<Class<? extends Object>> outputClasses = classFinder.findAllMatchingTypes(outputDir, Object.class);
-            List<Class<? extends Object>> outputTestClasses = classFinder.findAllMatchingTypes(testOutputDir, Object.class);
-
-            getLog().info(String.format("outputClasses: %s", outputClasses));
-            getLog().info(String.format("outputTestClasses: %s", outputTestClasses));
             //transformDocumentationFiles();
         } catch(Exception e) {
             throw new MojoExecutionException("exception while executing dacdoc-maven-plugin compile goal " + e.getMessage());
+        }
+    }
+
+    private void loadCustomChecks() {
+        // load classes that extend DacDoc check
+        JavaClassFinder classFinder = new JavaClassFinder(getClassLoader(this.project));
+        String outputDir = project.getBuild().getOutputDirectory();
+        String testOutputDir = project.getBuild().getTestOutputDirectory();
+
+        List<Class<? extends Check>> outputClasses = classFinder.findAllMatchingTypes(outputDir, Check.class);
+        List<Class<? extends Check>> outputTestClasses = classFinder.findAllMatchingTypes(testOutputDir, Check.class);
+
+        getLog().info(String.format("outputClasses: %s", outputClasses));
+        getLog().info(String.format("outputTestClasses: %s", outputTestClasses));
+
+        Set<Class<? extends Check>> allUserCheckClasses = new HashSet<>();
+        allUserCheckClasses.addAll(outputClasses);
+        allUserCheckClasses.addAll(outputTestClasses);
+
+        // put all check classes to registry
+        for(Class<? extends Check> checkClass: allUserCheckClasses) {
+            String checkName = Optional.ofNullable(checkClass.getDeclaredAnnotation(CheckMetadata.class)).map(CheckMetadata::id).orElse(checkClass.getName());
+
+            CheckRegistry.checkRegistry.put(checkName, checkClass);
+
+            getLog().info(String.format("registered test class %s in check registry", checkClass.getName()));
         }
     }
 
