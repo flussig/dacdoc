@@ -88,7 +88,7 @@ public class DacDocCompile
 
             CheckRegistry.checkRegistry.put(checkName, checkClass);
 
-            getLog().info(String.format("registered test class %s in check registry", checkClass.getName()));
+            getLog().info(String.format("registered test class %s in check registry. test id: %s", checkClass.getName(), checkName));
         }
     }
 
