@@ -19,6 +19,7 @@ package com.github.flussig;
 import com.github.flussig.exception.DacDocException;
 import com.github.flussig.text.Anchor;
 import com.github.flussig.text.Reader;
+import com.github.flussig.util.classloader.JavaClassFinder;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -54,7 +55,15 @@ public class DacDocCompile
     public void execute() throws MojoExecutionException
     {
         try {
-            getClassLoader(this.project);
+            JavaClassFinder classFinder = new JavaClassFinder(getClassLoader(this.project));
+            String outputDir = project.getBuild().getOutputDirectory();
+            String testOutputDir = project.getBuild().getTestOutputDirectory();
+
+            List<Class<? extends Object>> outputClasses = classFinder.findAllMatchingTypes(outputDir, Object.class);
+            List<Class<? extends Object>> outputTestClasses = classFinder.findAllMatchingTypes(testOutputDir, Object.class);
+
+            getLog().info(String.format("outputClasses: %s", outputClasses));
+            getLog().info(String.format("outputTestClasses: %s", outputTestClasses));
             //transformDocumentationFiles();
         } catch(Exception e) {
             throw new MojoExecutionException("exception while executing dacdoc-maven-plugin compile goal " + e.getMessage());
