@@ -20,6 +20,32 @@ Its use cases are not limited by technical documentation, but are mainly aimed t
 Such, applying dacdoc maven plugin requires having **Java** (8 and higher) installed on your machine along with **maven** and **git**. 
 For simplest use - cases such as checking correctness of links in your documentation - no specific code is required. For more specific use cases DacDoc allows for creation of user-defined tests in Java.
 
-With this approach documentation exists in pre-compiled and compiled version: pre-compiled version specifies fragments that need to be tested and tests that need to be run; compiled version has all tests applied and all test fail/pass indicators inserted. 
+With this approach documentation exists in pre-compiled and compiled version. Pre-compiled version specifies fragments that need to be tested and tests that need to be run; compiled version has all tests applied and all test fail/pass indicators inserted. 
 
 # Using DacDoc
+## Quick start
+Short instructions to start working with DacDoc:
+0. create git repository
+1. create empty maven project
+2. add dacdoc-maven-plugin to **plugins** section of your **pom.xml**
+2. create documentation files in **.md** format in root folder and subfolders of your project
+3. surround testable fragments of your documentation with placeholder:
+   ```markdown
+   !DACDOC{<your testable documentation fragment>}(<parameters>)!
+   ```
+   Example of the documentation project can be found [here](./dacdoc-maven-plugin-test). More on the parameters of testable fragment later.
+   
+4. (optional - if you need custom checks) add dependency on dacdoc-core and create custom check for your documentation fragment
+    More on custom checks later.
+      
+5. create release branch for your documentation and checkout this branch
+6. (optional - needed if your project defines custom checks) compile the project with `mvn clean compile`
+7. compile documentation from the root of your project using `mvn com.github.flussig:dacdoc-maven-plugin:compile`
+8. commit changes to release branch
+9. done: now your documentation is ready and has checks applied to testable fragments
+
+## Testable fragments
+
+## Parameters
+
+## Custom checks
