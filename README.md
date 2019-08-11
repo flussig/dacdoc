@@ -69,8 +69,8 @@ Example (DACDOC complex check):
 ```
 
 List of parameters:
-* `id` - unique ID for the given test. Useful when complex checks are defined, so this test can be part of this complex check.
-* `test` - is of the test. If no id is given, then DacDoc will assume that this is simple url test. Custom test IDs are defined with `com.github.flussig.check.CheckMetadata` annotation
+* `id` - unique ID for the given DACDOC fragment. Useful when complex checks are defined, so this test can be part of this complex check.
+* `test` - name of the check defining what check should be used. If no test value is given, then DacDoc will assume that this is simple url test. Custom check names are defined with `com.github.flussig.check.CheckMetadata` annotation (see below).
 * `ids` - list of check ids participating in complex check
 
 ## Custom checks
