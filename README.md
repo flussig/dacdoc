@@ -71,20 +71,20 @@ Example (DACDOC complex check):
 
 List of parameters:
 * `id` - unique ID for the given DACDOC fragment. Useful when complex checks are defined, so this test can be part of this complex check.
-* `test` - name of the check defining what check should be used. If no test value is given, then DacDoc will assume that this is simple url test. Custom check names are defined with `com.github.flussig.check.CheckMetadata` annotation (see below).
+* `test` - name of the check defining what check should be used. If no test value is given, then DacDoc will assume that this is simple url test. Custom check names are defined with `com.github.flussig.dacdoc.check.CheckMetadata` annotation (see below).
 * `ids` - list of check ids participating in complex check
 
 ## Custom checks
 To build custom check one needs to:
 * specify class for making a custom check. Class can be specified under standard Maven code path: `src/main/java/...` or `src/test/java/...`. DacDoc is relying on standard Maven conventions of source and target folder locations within your project.
-* a class for custom check must extend the base check class: `com.github.flussig.check.Check` or - if this is a check that should run once and cache its result - `com.github.flussig.check.SingleExecutionCheck`
+* a class for custom check must extend the base check class: `com.github.flussig.dacdoc.check.Check` or - if this is a check that should run once and cache its result - `com.github.flussig.dacdoc.check.SingleExecutionCheck`
 * a class for custom check must specify a constructor accepting `(String argument, File file)`. This constructor should call the constructor of a super class with same signature.
   
   `argument` will be assigned to a protected field `argument` that has a value of tested text fragment.
   
   `file` will be assigned to a protected field `file` that will represent currently tested markdown file.
 * a class for custom check must override a method `execute` in case you extend `Check` class OR method `performCheck` extend in case you extend `SingleExecutionCheck`.
-* a class for custom check can be added a `com.github.flussig.check.CheckMetadata` annotation where one can specify ID that this test is registered with. 
+* a class for custom check can be added a `com.github.flussig.dacdoc.check.CheckMetadata` annotation where one can specify ID that this test is registered with. 
   In case this annotation is not provided - a class name will be used as test ID.
 
 ## Check results
