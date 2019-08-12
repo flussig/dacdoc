@@ -18,9 +18,7 @@ import java.util.List;
 public class JavaClassFinder  {
 	private static final String CLASS_FILE_EXT = ".class";
 
-	private ArrayList<Class<?>> foundClasses;
 	private ClassLoader classLoader;
-	private Class<?> toFind;
 
 	public JavaClassFinder(ClassLoader classLoader) {
 		this.classLoader = classLoader;
@@ -32,20 +30,19 @@ public class JavaClassFinder  {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<Class<? extends T>> findAllMatchingTypes(String classpath, Class<T> toFind) {
-		foundClasses = new ArrayList<>();
-		this.toFind = toFind;
+		ArrayList<Class<?>> foundClasses = new ArrayList<>();
 		List<Class<? extends T>> returnedClasses = new ArrayList<>();
-		walkClassPath(classpath);
+		walkClassPath(classpath, toFind, foundClasses);
 		for (Class<?> clazz : foundClasses) {
 			returnedClasses.add((Class<? extends T>) clazz);
 		}
 		return returnedClasses;
 	}
 
-	private void walkClassPath(String classpath) {
+	private <T> void walkClassPath(String classpath, Class<T> toFind, ArrayList<Class<?>> foundClasses) {
 		try {
 			File rootDir = new File(classpath);
-			walk(rootDir, classpath);
+			walk(rootDir, classpath, toFind, foundClasses);
 		} catch (Exception e) {
 			// if any sort of error occurs due to bad file path, or other issues, just catch and swallow
 			// because we don't expect any Exceptions in normal course of usage
@@ -53,32 +50,20 @@ public class JavaClassFinder  {
 		}
 	}
 
-	/**
-	 * Preorder traversal of tree
-	 */
-	private void walk(File currentDir, String classpath) {
+	private <T> void walk(File currentDir,  String classpath, Class<T> toFind, ArrayList<Class<?>> foundClasses) {
 		File[] files = currentDir.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
 			if (file.isDirectory()) {
-				walk(file, classpath);
+				walk(file, classpath, toFind, foundClasses);
 			} else {
 				if (file.getName().endsWith(CLASS_FILE_EXT)) {
-					handleFile(file, classpath);
+					Class<?> clazz = convertToClass(file, classpath);
+					if (clazz != null && toFind.isAssignableFrom(clazz)) {
+						foundClasses.add(clazz);
+					}
 				}
 			}
-		}
-	}
-
-	private void handleFile(File file, String classpath) {
-		// if we get a Java class file, try to convert it to a class
-		Class<?> clazz = convertToClass(file, classpath);
-		if (clazz == null) {
-			return;
-		}
-
-		if (toFind == null || toFind.isAssignableFrom(clazz)) {
-			foundClasses.add(clazz);
 		}
 	}
 
