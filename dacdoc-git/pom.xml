@@ -20,5 +20,10 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.flussig</groupId>
+            <artifactId>dacdoc-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
