@@ -1,6 +1,8 @@
 package com.github.flussig.dacdoc.text;
 
 import com.github.flussig.dacdoc.Constants;
+import com.github.flussig.dacdoc.GitBlameLineDetails;
+import com.github.flussig.dacdoc.GitUtil;
 import com.github.flussig.dacdoc.check.Check;
 import com.github.flussig.dacdoc.check.CheckRegistry;
 import com.github.flussig.dacdoc.check.CheckResult;
@@ -95,7 +97,12 @@ public class Reader {
                 }));
 
         for(File file: files) {
+            List<GitBlameLineDetails> gitBlameLineDetails = GitUtil.getBlameDetails(file);
+
             String newFileContent = fileContents.get(file);
+
+            // get line numbers for all anchors in the file before modifying the text
+            Map<>
 
             // replace each anchor with new content after checks
             for(Anchor anchor: checkMap.get(file)) {
@@ -113,8 +120,11 @@ public class Reader {
             List<Check> fileChecks = checkMap.get(file).stream().map(Anchor::getCheck).collect(Collectors.toList());
             Check aggregateFileCheck = new CompositeCheck(fileChecks);
 
-            String fileCheckImageString =
-                    Anchor.getCheckResultImage(aggregateFileCheck.execute(), dacdocResourceFirectory, file, file.getName());
+            String fileCheckImageString = Anchor.getCheckImage(
+                    aggregateFileCheck.execute(),
+                    dacdocResourceFirectory,
+                    file,
+                    file.getName());
 
             newFileContent = String.format("%s\n\n%s", fileCheckImageString, newFileContent);
 

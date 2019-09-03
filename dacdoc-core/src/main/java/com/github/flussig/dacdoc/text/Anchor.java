@@ -1,5 +1,6 @@
 package com.github.flussig.dacdoc.text;
 
+import com.github.flussig.dacdoc.GitBlameLineDetails;
 import com.github.flussig.dacdoc.check.Check;
 import com.github.flussig.dacdoc.check.CheckRegistry;
 import com.github.flussig.dacdoc.check.CheckStatus;
@@ -11,6 +12,9 @@ import com.github.flussig.dacdoc.exception.DacDocParseException;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
  * Class contains information of DACDOC placeholder and associated tags
  */
 public final class Anchor {
+    private final static String MD_IMAGE_NEWLINE = "&#010;";
     private String fullText;
     private String id;
     private Collection<String> ids = new ArrayList<>();
@@ -97,7 +102,7 @@ public final class Anchor {
         return paramMap;
     }
 
-    private static String getResultImagePath(CheckStatus checkStatus, Path dacdocResourceDirectory, File currentFile) {
+    private static String getCheckImagePath(CheckStatus checkStatus, Path dacdocResourceDirectory, File currentFile) {
         String imageFileName;
         switch(checkStatus) {
             case RED:
@@ -118,8 +123,9 @@ public final class Anchor {
         return currentFile.getParentFile().toPath().relativize(Paths.get(dacdocResourceDirectory.toString(), imageFileName)).toString();
     }
 
-    public static String getCheckResultImage(
+    public static String getCheckImage(
             CheckResult checkResult,
+            GitBlameLineDetails gitBlameLineDetails,
             Path dacdocResourceDirectory,
             File currentFile,
             String id) {
@@ -127,8 +133,28 @@ public final class Anchor {
         return String.format(
                 "![%s](%s \"%s\")",
                 id,
-                getResultImagePath(checkResult.getStatus(), dacdocResourceDirectory, currentFile),
-                String.format("checked on %s", checkResult.getTime().toString()));
+                getCheckImagePath(checkResult.getStatus(), dacdocResourceDirectory, currentFile),
+                getCheckImageToolitip(checkResult, gitBlameLineDetails));
+    }
+
+    public static String getCheckImageToolitip(CheckResult checkResult, GitBlameLineDetails gitBlameLineDetails) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(String.format("checked on %s", checkResult.getTime().toString()));
+        sb.append(MD_IMAGE_NEWLINE);
+        sb.append(String.format("last updates on %s", LocalDateTime.from(Instant.ofEpochSecond(gitBlameLineDetails.getEpochSecond())).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
+        sb.append(MD_IMAGE_NEWLINE);
+        sb.append(String.format("last modified by %s (%s)", gitBlameLineDetails.getUser(), gitBlameLineDetails.getUserEmail()));
+        sb.append(MD_IMAGE_NEWLINE);
+        sb.append(String.format("last modified commit %s", gitBlameLineDetails.getCommitId()));
+
+        if(Strings.isNotNullOrEmpty(checkResult.getMessage())) {
+            sb.append(MD_IMAGE_NEWLINE);
+            sb.append(checkResult.getMessage());
+        }
+
+        return sb.toString();
+
     }
 
 
@@ -144,8 +170,8 @@ public final class Anchor {
      * When check result is acquired, this method will return full text of anchor with DACDOC placeholder stripped away and decorations for showing check results added
      * !DACDOC{xxx}(...)! --> xxx ![test-id](./dacdoc-resources/circle-green-12px.png "comment")
      */
-    public String getTransformedText(CheckResult checkResult, Path dacdocResourceDirectory, File currentFile) {
-        String resultImage = getCheckResultImage(checkResult, dacdocResourceDirectory, currentFile, id);
+    public String getTransformedText(CheckResult checkResult, GitBlameLineDetails gitBlameLineDetails, Path dacdocResourceDirectory, File currentFile) {
+        String resultImage = getCheckImage(checkResult, gitBlameLineDetails, dacdocResourceDirectory, currentFile, id);
 
         // if content is not empty, put content and then image reference
         if(Strings.isNullOrEmpty(argument)) {
