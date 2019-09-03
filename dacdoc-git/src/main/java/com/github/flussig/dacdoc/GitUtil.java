@@ -23,7 +23,7 @@ public class GitUtil {
 
             List<String> buffer = new ArrayList<>();
 
-            try(BufferedReader in = new BufferedReader(new InputStreamReader(gitBlameProcess.getErrorStream()))) {
+            try(BufferedReader in = new BufferedReader(new InputStreamReader(gitBlameProcess.getInputStream()))) {
                 String line;
                 while ((line = in.readLine()) != null) {
                     buffer.add(line);

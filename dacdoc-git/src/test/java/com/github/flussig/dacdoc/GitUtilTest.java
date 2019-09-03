@@ -18,7 +18,7 @@ public class GitUtilTest
     public void testGitUtilBlame() {
         File readmeFile = new File(getClass()
                 .getClassLoader()
-                .getResource("README.md")
+                .getResource("test-readme.md")
                 .getFile());
 
         List<GitBlameLineDetails> gitBlameLineDetails = GitUtil.getBlameDetails(readmeFile);
