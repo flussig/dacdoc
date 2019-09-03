@@ -6,6 +6,8 @@
   <packaging>pom</packaging>
   <version>0.0.7-SNAPSHOT</version>
   <modules>
+    <module>dacdoc-util</module>
+    <module>dacdoc-check</module>
     <module>dacdoc-core</module>
     <module>dacdoc-git</module>
     <module>dacdoc-maven-plugin</module>

@@ -1,6 +1,7 @@
 package com.github.flussig.dacdoc.text;
 
 import com.github.flussig.dacdoc.check.Check;
+import com.github.flussig.dacdoc.check.CheckRegistry;
 import com.github.flussig.dacdoc.check.CheckStatus;
 import com.github.flussig.dacdoc.Constants;
 import com.github.flussig.dacdoc.check.CheckResult;
@@ -65,7 +66,7 @@ public final class Anchor {
         if(paramMap != null && !paramMap.isEmpty() && paramMap.containsKey(Constants.ANCHOR_PARAMETER_TEST_ID)) {
             result.testId = paramMap.get(Constants.ANCHOR_PARAMETER_TEST_ID);
         } else {
-            result.testId = Constants.DEFAULT_TEST_ID;
+            result.testId = CheckRegistry.DEFAULT_TEST_ID;
         }
 
         // attach ids of child anchors
