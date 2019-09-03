@@ -1,7 +1,5 @@
 package com.github.flussig.dacdoc;
 
-import org.apache.commons.collections.ArrayStack;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
