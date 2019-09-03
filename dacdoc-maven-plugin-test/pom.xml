@@ -23,7 +23,7 @@
 
         <dependency>
             <groupId>com.github.flussig</groupId>
-            <artifactId>dacdoc-core</artifactId>
+            <artifactId>dacdoc-check</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

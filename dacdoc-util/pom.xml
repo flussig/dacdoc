@@ -9,9 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dacdoc-core</artifactId>
+    <artifactId>dacdoc-util</artifactId>
 
-    <name>dacdoc-core</name>
+    <name>dacdoc-util</name>
 
     <dependencies>
         <dependency>
@@ -19,16 +19,6 @@
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.flussig</groupId>
-            <artifactId>dacdoc-util</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.flussig</groupId>
-            <artifactId>dacdoc-check</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

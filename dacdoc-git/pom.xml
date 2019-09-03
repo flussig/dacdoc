@@ -25,5 +25,10 @@
             <artifactId>dacdoc-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.flussig</groupId>
+            <artifactId>dacdoc-util</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
