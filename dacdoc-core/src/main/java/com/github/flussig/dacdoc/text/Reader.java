@@ -9,6 +9,7 @@ import com.github.flussig.dacdoc.check.CheckResult;
 import com.github.flussig.dacdoc.check.CompositeCheck;
 import com.github.flussig.dacdoc.exception.DacDocException;
 import com.github.flussig.dacdoc.exception.DacDocParseException;
+import com.github.flussig.dacdoc.util.Strings;
 
 import java.io.File;
 import java.io.IOException;
@@ -97,24 +98,27 @@ public class Reader {
                 }));
 
         for(File file: files) {
+            // git blame details before modifying the text
             List<GitBlameLineDetails> gitBlameLineDetails = GitUtil.getBlameDetails(file);
+
+            // get line numbers for all anchors in the file before modifying the text
+            Map<Anchor, Set<Integer>> anchorLineNumbers = checkMap.get(file).stream()
+                    .collect(Collectors.toMap(
+                            a -> a,
+                            a -> Strings.lineNumbersOfSubstring(fileContents.get(file), a.getFullText())));
 
             String newFileContent = fileContents.get(file);
 
-
             // replace each anchor with new content after checks
             for(Anchor anchor: checkMap.get(file)) {
-                // get line numbers for all anchors in the file before modifying the text
                 Check check = anchor.getCheck();
 
                 CheckResult checkResult = check.execute();
 
-                newFileContent.indexOf()
-
                 // replace given anchor with test result
                 newFileContent = newFileContent.replace(
                         anchor.getFullText(),
-                        anchor.getTransformedText(checkResult, dacdocResourceFirectory, file));
+                        anchor.getTransformedText(checkResult, null, dacdocResourceFirectory, file));
             }
 
             // add aggregate check for the file to the top of the file
@@ -123,6 +127,7 @@ public class Reader {
 
             String fileCheckImageString = Anchor.getCheckImage(
                     aggregateFileCheck.execute(),
+                    null,
                     dacdocResourceFirectory,
                     file,
                     file.getName());
