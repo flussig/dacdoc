@@ -101,14 +101,15 @@ public class Reader {
 
             String newFileContent = fileContents.get(file);
 
-            // get line numbers for all anchors in the file before modifying the text
-            Map<>
 
             // replace each anchor with new content after checks
             for(Anchor anchor: checkMap.get(file)) {
+                // get line numbers for all anchors in the file before modifying the text
                 Check check = anchor.getCheck();
 
                 CheckResult checkResult = check.execute();
+
+                newFileContent.indexOf()
 
                 // replace given anchor with test result
                 newFileContent = newFileContent.replace(
