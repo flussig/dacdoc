@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -143,7 +144,7 @@ public final class Anchor {
 
         if(gitBlameLineDetails != null) {
             sb.append(MD_IMAGE_NEWLINE);
-            sb.append(String.format("last updates on %s", LocalDateTime.from(Instant.ofEpochSecond(gitBlameLineDetails.getEpochSecond())).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
+            sb.append(String.format("last updated on %s", LocalDateTime.from(Instant.ofEpochSecond(gitBlameLineDetails.getEpochSecond()).atOffset(ZoneOffset.UTC)).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
             sb.append(MD_IMAGE_NEWLINE);
             sb.append(String.format("last modified by %s (%s)", gitBlameLineDetails.getUser(), gitBlameLineDetails.getUserEmail()));
             sb.append(MD_IMAGE_NEWLINE);
