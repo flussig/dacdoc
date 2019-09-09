@@ -127,6 +127,7 @@ public class Reader {
             Check aggregateFileCheck = new CompositeCheck(fileChecks);
             GitBlameLineDetails latestGitBlameForFile = anchorToLatestGitBlame.entrySet().stream()
                     .flatMap(kv -> kv.getValue().stream())
+                    .filter(Objects::nonNull)
                     .max(Comparator.comparing(GitBlameLineDetails::getEpochSecond))
                     .orElse(null);
 
@@ -171,9 +172,7 @@ public class Reader {
                         .max(Comparator.comparing(GitBlameLineDetails::getEpochSecond))
                         .orElse(null);
 
-                if(latestGitBlameDetail != null) {
-                    latestGitBlameDetails.add(latestGitBlameDetail);
-                }
+                latestGitBlameDetails.add(latestGitBlameDetail);
             }
 
             anchorToLatestGitBlame.put(anchor, latestGitBlameDetails);
