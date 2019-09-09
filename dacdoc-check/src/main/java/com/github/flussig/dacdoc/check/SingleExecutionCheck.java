@@ -30,6 +30,8 @@ public abstract class SingleExecutionCheck extends Check {
             return;
 
         result = performCheck();
+
+        executed = true;
     }
 
     /**

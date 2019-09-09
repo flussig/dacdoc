@@ -1,7 +1,5 @@
 package com.github.flussig.dacdoc.check;
 
-import com.github.flussig.dacdoc.exception.DacDocParseException;
-
 import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -28,7 +26,7 @@ public class UrlCheck extends SingleExecutionCheck {
      * []() syntax: [mylink](google.com)
      * TODO: not supported now - [] syntax: [mylink] .... [mylink] = google.com
      */
-    private static String extractMarkdownUri(String argument) throws DacDocParseException {
+    private static String extractMarkdownUri(String argument) {
         Matcher matcher = mdUrlPattern.matcher(argument);
 
         // [...](...)

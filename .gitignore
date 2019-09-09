@@ -14,3 +14,6 @@ buildNumber.properties
 # IntelliJ
 .idea
 *.iml
+
+# avoid ignoring 1 target test file needed to test git util
+!dacdoc-git/target/test-classes/test-readme.md
