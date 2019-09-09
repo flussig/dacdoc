@@ -17,10 +17,11 @@ public class Strings {
 
     // returns line numbers of the full string where substrings are found
     public static Set<Integer> lineNumbersOfSubstring(String text, String substring) {
-        int currentIndex = 0;
+        int currentIndex = -1;
         Set<Integer> lineNumbers = new HashSet<>();
-        while(currentIndex != -1) {
-            currentIndex = text.indexOf('\n', currentIndex);
+        while(true) {
+            currentIndex = text.indexOf(substring, currentIndex + 1);
+            if(currentIndex < 0) break;
             lineNumbers.add(lineNumberOfCharacterAtIndex(text, currentIndex));
         }
         return lineNumbers;
@@ -34,10 +35,11 @@ public class Strings {
 
     // gives line number of a character of a given index in a text
     public static int lineNumberOfCharacterAtIndex(String text, Integer index) {
-        int currentIndex = 0;
+        int currentIndex = -1;
         int lineNumber = 0;
-        while(currentIndex < index && currentIndex != -1) {
-            currentIndex = text.indexOf('\n', currentIndex);
+        while(currentIndex < index) {
+            currentIndex = text.indexOf('\n', currentIndex + 1);
+            if(currentIndex < 0) break;
             lineNumber++;
         }
         return lineNumber;

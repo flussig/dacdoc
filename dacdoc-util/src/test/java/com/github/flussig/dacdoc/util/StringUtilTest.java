@@ -33,4 +33,32 @@ public class StringUtilTest {
 
         assertEquals(0, linesForSubstringNoEntry.size());
     }
+
+    @Test
+    public void testNumberOfLines() throws IOException {
+        File readme = new File(getClass()
+                .getClassLoader()
+                .getResource("README.md")
+                .getFile());
+
+        String readmeContent = new String(Files.readAllBytes(readme.toPath()));
+
+        int numOfLines = Strings.numberOfLines(readmeContent);
+
+        assertEquals(8, numOfLines);
+    }
+
+    @Test
+    public void testLineNumberOfCharacterAtIndex() throws IOException {
+        File readme = new File(getClass()
+                .getClassLoader()
+                .getResource("README.md")
+                .getFile());
+
+        String readmeContent = new String(Files.readAllBytes(readme.toPath()));
+
+        int lineNumber = Strings.lineNumberOfCharacterAtIndex(readmeContent, 9);
+
+        assertEquals(2, lineNumber);
+    }
 }
