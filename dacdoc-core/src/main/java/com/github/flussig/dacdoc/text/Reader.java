@@ -98,16 +98,11 @@ public class Reader {
                 }));
 
         for(File file: files) {
-            // git blame details before modifying the text
-            List<GitBlameLineDetails> gitBlameLineDetails = GitUtil.getBlameDetails(file);
-
-            // get line numbers for all anchors in the file before modifying the text
-            Map<Anchor, Set<Integer>> anchorLineNumbers = checkMap.get(file).stream()
-                    .collect(Collectors.toMap(
-                            a -> a,
-                            a -> Strings.lineNumbersOfSubstring(fileContents.get(file), a.getFullText())));
-
             String newFileContent = fileContents.get(file);
+
+            // map each anchor for the file to latest git blame detail
+            Map<Anchor, Set<GitBlameLineDetails>> anchorToLatestGitBlame =
+                    createAnchorToGitBlameMap(checkMap, fileContents, file);
 
             // replace each anchor with new content after checks
             for(Anchor anchor: checkMap.get(file)) {
@@ -115,19 +110,29 @@ public class Reader {
 
                 CheckResult checkResult = check.execute();
 
-                // replace given anchor with test result
-                newFileContent = newFileContent.replace(
-                        anchor.getFullText(),
-                        anchor.getTransformedText(checkResult, null, dacdocResourceFirectory, file));
-            }
+                Set<GitBlameLineDetails> gitBlames = anchorToLatestGitBlame.get(anchor);
+
+                for(GitBlameLineDetails gitBlame: gitBlames) {
+                    // replace given anchor with test result
+                    newFileContent = Strings.replaceFirst(
+                            newFileContent,
+                            anchor.getFullText(),
+                            anchor.getTransformedText(checkResult, gitBlame, dacdocResourceFirectory, file));
+
+                }
+             }
 
             // add aggregate check for the file to the top of the file
             List<Check> fileChecks = checkMap.get(file).stream().map(Anchor::getCheck).collect(Collectors.toList());
             Check aggregateFileCheck = new CompositeCheck(fileChecks);
+            GitBlameLineDetails latestGitBlameForFile = anchorToLatestGitBlame.entrySet().stream()
+                    .flatMap(kv -> kv.getValue().stream())
+                    .max(Comparator.comparing(GitBlameLineDetails::getEpochSecond))
+                    .orElse(null);
 
             String fileCheckImageString = Anchor.getCheckImage(
                     aggregateFileCheck.execute(),
-                    null,
+                    latestGitBlameForFile,
                     dacdocResourceFirectory,
                     file,
                     file.getName());
@@ -138,6 +143,41 @@ public class Reader {
         }
 
         return fileContents;
+    }
+
+    private static Map<Anchor, Set<GitBlameLineDetails>> createAnchorToGitBlameMap(Map<File, Set<Anchor>> checkMap, Map<File, String> fileContents, File file) {
+        // git blame details before modifying the text
+        List<GitBlameLineDetails> gitBlameLineDetails = GitUtil.getBlameDetails(file);
+
+        // get line numbers for all anchors in the file before modifying the text
+        Map<Anchor, Set<Integer>> anchorToLineNumbers = checkMap.get(file).stream()
+                .collect(Collectors.toMap(
+                        a -> a,
+                        a -> Strings.lineNumbersOfSubstring(fileContents.get(file), a.getFullText())));
+
+        // map from anchor to blame info for latest changed line in anchor
+        Map<Anchor, Set<GitBlameLineDetails>> anchorToLatestGitBlame = new HashMap<>();
+
+        for(Map.Entry<Anchor, Set<Integer>> kv: anchorToLineNumbers.entrySet()) {
+            Anchor anchor = kv.getKey();
+            int anchorNumOfLines = Strings.numberOfLines(anchor.getFullText());
+
+            Set<GitBlameLineDetails> latestGitBlameDetails = new HashSet<>();
+
+            for(Integer lineNumber: kv.getValue()) {
+                GitBlameLineDetails latestGitBlameDetail = gitBlameLineDetails.stream()
+                        .filter(gitBlameLineDetail ->
+                                gitBlameLineDetail.getLineNumber() >= lineNumber && gitBlameLineDetail.getLineNumber() < lineNumber + anchorNumOfLines)
+                        .max(Comparator.comparing(GitBlameLineDetails::getEpochSecond))
+                        .orElse(null);
+
+                latestGitBlameDetails.add(latestGitBlameDetail);
+            }
+
+            anchorToLatestGitBlame.put(anchor, latestGitBlameDetails);
+        }
+
+        return anchorToLatestGitBlame;
     }
 
     /**

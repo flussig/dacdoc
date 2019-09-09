@@ -139,14 +139,16 @@ public final class Anchor {
 
     public static String getCheckImageToolitip(CheckResult checkResult, GitBlameLineDetails gitBlameLineDetails) {
         StringBuilder sb = new StringBuilder();
-
         sb.append(String.format("checked on %s", checkResult.getTime().toString()));
-        sb.append(MD_IMAGE_NEWLINE);
-        sb.append(String.format("last updates on %s", LocalDateTime.from(Instant.ofEpochSecond(gitBlameLineDetails.getEpochSecond())).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
-        sb.append(MD_IMAGE_NEWLINE);
-        sb.append(String.format("last modified by %s (%s)", gitBlameLineDetails.getUser(), gitBlameLineDetails.getUserEmail()));
-        sb.append(MD_IMAGE_NEWLINE);
-        sb.append(String.format("last modified commit %s", gitBlameLineDetails.getCommitId()));
+
+        if(gitBlameLineDetails != null) {
+            sb.append(MD_IMAGE_NEWLINE);
+            sb.append(String.format("last updates on %s", LocalDateTime.from(Instant.ofEpochSecond(gitBlameLineDetails.getEpochSecond())).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
+            sb.append(MD_IMAGE_NEWLINE);
+            sb.append(String.format("last modified by %s (%s)", gitBlameLineDetails.getUser(), gitBlameLineDetails.getUserEmail()));
+            sb.append(MD_IMAGE_NEWLINE);
+            sb.append(String.format("last modified commit %s", gitBlameLineDetails.getCommitId()));
+        }
 
         if(Strings.isNotNullOrEmpty(checkResult.getMessage())) {
             sb.append(MD_IMAGE_NEWLINE);
