@@ -61,4 +61,21 @@ public class StringUtilTest {
 
         assertEquals(2, lineNumber);
     }
+
+    @Test
+    public void testReplaceFirst() {
+        String testString = "abcdef 1234 abcdef";
+
+        // replace once
+        testString = Strings.replaceFirst(testString, "abcdef", "xxxxx");
+        assertEquals("xxxxx 1234 abcdef", testString);
+
+        // replace twice
+        testString = Strings.replaceFirst(testString, "abcdef", "xxxxx");
+        assertEquals("xxxxx 1234 xxxxx", testString);
+
+        // replace thrice
+        testString = Strings.replaceFirst(testString, "abcdef", "xxxxx");
+        assertEquals("xxxxx 1234 xxxxx", testString);
+    }
 }

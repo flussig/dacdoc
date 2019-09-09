@@ -44,4 +44,21 @@ public class Strings {
         }
         return lineNumber;
     }
+
+    // replace 1st occurence of a substring
+    public static String replaceFirst(String text, String substring, String replacement) {
+        if(isNullOrEmpty(text) || isNullOrEmpty(substring) || replacement == null || substring.equals(replacement)) {
+            return text;
+        }
+
+        int indexOfSubstring = text.indexOf(substring);
+        if(indexOfSubstring < 0) return text;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(text, 0, indexOfSubstring);
+        sb.append(replacement);
+        sb.append(text, indexOfSubstring + substring.length(), text.length());
+
+        return sb.toString();
+    }
 }
