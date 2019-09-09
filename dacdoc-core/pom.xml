@@ -30,5 +30,10 @@
             <artifactId>dacdoc-check</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.flussig</groupId>
+            <artifactId>dacdoc-git</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

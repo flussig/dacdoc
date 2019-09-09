@@ -14,7 +14,7 @@ public class GitUtil {
         // run git blame and read file content
         List<GitBlameLineDetails> result = new ArrayList<>();
 
-        String gitBlameCommand = String.format("git blame -w --line-porcelain \"%s\"", file.getAbsolutePath());
+        String gitBlameCommand = String.format("git blame -w --line-porcelain %s", file.getAbsolutePath());
 
         try {
             Process gitBlameProcess = Runtime.getRuntime().exec(gitBlameCommand);
