@@ -171,7 +171,9 @@ public class Reader {
                         .max(Comparator.comparing(GitBlameLineDetails::getEpochSecond))
                         .orElse(null);
 
-                latestGitBlameDetails.add(latestGitBlameDetail);
+                if(latestGitBlameDetail != null) {
+                    latestGitBlameDetails.add(latestGitBlameDetail);
+                }
             }
 
             anchorToLatestGitBlame.put(anchor, latestGitBlameDetails);
