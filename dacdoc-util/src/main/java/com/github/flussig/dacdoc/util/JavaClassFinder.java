@@ -52,6 +52,11 @@ public class JavaClassFinder  {
 
 	private <T> void walk(File currentDir,  String classpath, Class<T> toFind, ArrayList<Class<?>> foundClasses) {
 		File[] files = currentDir.listFiles();
+
+		if(files == null || files.length == 0) {
+			return;
+		}
+
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
 			if (file.isDirectory()) {
