@@ -6,9 +6,16 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.X509TrustManager;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 
 /**
  * Tests relative link
@@ -16,8 +23,14 @@ import java.util.regex.Pattern;
 public class UrlCheck extends SingleExecutionCheck {
     private static final int REQUEST_TIMEOUT_MS = 500;
     private static final String REQUEST_METHOD = "GET";
-
     private static Pattern mdUrlPattern = Pattern.compile(String.format("\\[(.*?)\\]\\((.*?)\\)"));
+    private static X509TrustManager trustAllManager = new X509TrustManager() {
+        public void checkClientTrusted(
+            X509Certificate[] chain, String authType) throws CertificateException {}
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {}
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }};
 
     /**
      * extracting uri from markdown format for link
@@ -79,6 +92,16 @@ public class UrlCheck extends SingleExecutionCheck {
             con.setRequestMethod(REQUEST_METHOD);
             con.setConnectTimeout(REQUEST_TIMEOUT_MS);
             con.setReadTimeout(REQUEST_TIMEOUT_MS);
+
+            if(con instanceof HttpsURLConnection) {
+                ((HttpsURLConnection)con).setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                SSLContext context = SSLContext.getInstance("TLS");
+                context.init(null,
+                    new X509TrustManager[] { trustAllManager },
+                    new SecureRandom());
+                ((HttpsURLConnection)con).setSSLSocketFactory(context.getSocketFactory());
+            }
+
             int responseCode = con.getResponseCode();
 
             if(responseCode > 299) {
