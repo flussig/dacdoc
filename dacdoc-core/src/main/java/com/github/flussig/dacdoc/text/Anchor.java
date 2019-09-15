@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
  */
 public final class Anchor {
     private final static String MD_IMAGE_NEWLINE = "&#010;";
+    private final static String MD_IMAGE_COLON = "&#058;";
     private String fullText;
     private String id;
     private Collection<String> ids = new ArrayList<>();
@@ -156,8 +157,7 @@ public final class Anchor {
             sb.append(checkResult.getMessage());
         }
 
-        return sb.toString();
-
+        return sb.toString().replace(":", MD_IMAGE_COLON);
     }
 
 
