@@ -21,7 +21,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
  * Tests relative link
  */
 public class UrlCheck extends SingleExecutionCheck {
-    private static final int REQUEST_TIMEOUT_MS = 500;
+    private static final int REQUEST_TIMEOUT_MS = 5000;
     private static final String REQUEST_METHOD = "GET";
     private static Pattern mdUrlPattern = Pattern.compile(String.format("\\[(.*?)\\]\\((.*?)\\)"));
     private static X509TrustManager trustAllManager = new X509TrustManager() {

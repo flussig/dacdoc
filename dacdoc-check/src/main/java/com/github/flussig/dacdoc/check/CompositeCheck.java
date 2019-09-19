@@ -21,7 +21,7 @@ public class CompositeCheck extends SingleExecutionCheck {
 
     @Override
     public CheckResult performCheck() {
-        Collection<CheckResult> results = checks.stream().map(Check::execute).collect(Collectors.toList());
+        Collection<CheckResult> results = checks.parallelStream().map(Check::execute).collect(Collectors.toList());
 
         CheckStatus aggregateStatus =
                 CheckStatus.fromMultiple(results.stream().map(CheckResult::getStatus).collect(Collectors.toSet()));
