@@ -41,6 +41,7 @@ public class Reader {
             Files.walk(path)
                     .filter(Files::isRegularFile)
                     .map(Path::toFile)
+                    .filter(file -> !file.getName().startsWith("_"))
                     .filter(file -> file.getName().endsWith(".md"))
                     .forEach(result::add);
         } catch(Exception e) {
@@ -97,53 +98,65 @@ public class Reader {
                     }
                 }));
 
-        for(File file: files) {
-            String newFileContent = fileContents.get(file);
-
-            // map each anchor for the file to latest git blame detail
-            Map<Anchor, Set<GitBlameLineDetails>> anchorToLatestGitBlame =
-                    createAnchorToGitBlameMap(checkMap, fileContents, file);
-
-            // replace each anchor with new content after checks
-            for(Anchor anchor: checkMap.get(file)) {
-                Check check = anchor.getCheck();
-
-                CheckResult checkResult = check.execute();
-
-                Set<GitBlameLineDetails> gitBlames = anchorToLatestGitBlame.get(anchor);
-
-                for(GitBlameLineDetails gitBlame: gitBlames) {
-                    // replace given anchor with test result
-                    newFileContent = Strings.replaceFirst(
-                            newFileContent,
-                            anchor.getFullText(),
-                            anchor.getTransformedText(checkResult, gitBlame, dacdocResourceFirectory, file));
-
-                }
-             }
-
-            // add aggregate check for the file to the top of the file
-            List<Check> fileChecks = checkMap.get(file).stream().map(Anchor::getCheck).collect(Collectors.toList());
-            Check aggregateFileCheck = new CompositeCheck(fileChecks);
-            GitBlameLineDetails latestGitBlameForFile = anchorToLatestGitBlame.entrySet().stream()
-                    .flatMap(kv -> kv.getValue().stream())
-                    .filter(Objects::nonNull)
-                    .max(Comparator.comparing(GitBlameLineDetails::getEpochSecond))
-                    .orElse(null);
-
-            String fileCheckImageString = Anchor.getCheckImage(
-                    aggregateFileCheck.execute(),
-                    latestGitBlameForFile,
-                    dacdocResourceFirectory,
-                    file,
-                    file.getName());
-
-            newFileContent = String.format("%s\n\n%s", fileCheckImageString, newFileContent);
-
-            fileContents.replace(file, newFileContent);
-        }
+        files.parallelStream().forEach(file -> {
+            transformFile(checkMap, dacdocResourceFirectory, fileContents, file);
+        });
 
         return fileContents;
+    }
+
+    private static void transformFile(
+        Map<File, Set<Anchor>> checkMap,
+        Path dacdocResourceFirectory,
+        Map<File, String> fileContents,
+        File file) {
+        String newFileContent = fileContents.get(file);
+
+        // map each anchor for the file to latest git blame detail
+        Map<Anchor, Set<GitBlameLineDetails>> anchorToLatestGitBlame =
+            createAnchorToGitBlameMap(checkMap, fileContents, file);
+
+        // get check results in parallel
+        Map<Anchor, CheckResult> anchorCheckResults = checkMap.get(file)
+            .parallelStream()
+            .collect(Collectors.toMap(anchor -> anchor, anchor -> anchor.getCheck().execute()));
+
+        // replace each anchor with new content after checks
+        for(Anchor anchor: anchorCheckResults.keySet()) {
+            CheckResult checkResult = anchorCheckResults.get(anchor);
+
+            Set<GitBlameLineDetails> gitBlames = anchorToLatestGitBlame.get(anchor);
+
+            for(GitBlameLineDetails gitBlame: gitBlames) {
+                // replace given anchor with test result
+                newFileContent = Strings.replaceFirst(
+                    newFileContent,
+                    anchor.getFullText(),
+                    anchor.getTransformedText(checkResult, gitBlame, dacdocResourceFirectory, file));
+
+            }
+        }
+
+        // add aggregate check for the file to the top of the file
+        List<Check> fileChecks = checkMap.get(file).stream().map(Anchor::getCheck).collect(
+            Collectors.toList());
+        Check aggregateFileCheck = new CompositeCheck(fileChecks);
+        GitBlameLineDetails latestGitBlameForFile = anchorToLatestGitBlame.entrySet().stream()
+            .flatMap(kv -> kv.getValue().stream())
+            .filter(Objects::nonNull)
+            .max(Comparator.comparing(GitBlameLineDetails::getEpochSecond))
+            .orElse(null);
+
+        String fileCheckImageString = Anchor.getCheckImage(
+            aggregateFileCheck.execute(),
+            latestGitBlameForFile,
+            dacdocResourceFirectory,
+            file,
+            file.getName());
+
+        newFileContent = String.format("%s\n\n%s", fileCheckImageString, newFileContent);
+
+        fileContents.replace(file, newFileContent);
     }
 
     private static Map<Anchor, Set<GitBlameLineDetails>> createAnchorToGitBlameMap(Map<File, Set<Anchor>> checkMap, Map<File, String> fileContents, File file) {
