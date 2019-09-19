@@ -122,7 +122,20 @@ public final class Anchor {
                 break;
         }
 
-        return currentFile.getParentFile().toPath().relativize(Paths.get(dacdocResourceDirectory.toString(), imageFileName)).toString();
+        // relative path to image
+        String relativePath = currentFile.getParentFile()
+            .toPath()
+            .relativize(Paths.get(dacdocResourceDirectory.toString(), imageFileName))
+            .toString();
+
+        // revert relative path slashes for Windows
+        String os = Optional.ofNullable(System.getProperty("os.name")).map(String::toLowerCase).orElse(null);
+
+        if(os != null && os.contains("win")) {
+            relativePath = relativePath.replace('\\', '/');
+        }
+
+        return relativePath;
     }
 
     public static String getCheckImage(
