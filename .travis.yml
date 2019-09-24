@@ -15,7 +15,7 @@ env:
 install:
   - if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "gh-pages-development" ]; then
     echo "release github pages";
-    # git remote add origin-pages https://${GITHUB_TOKEN}@github.com/dacdoc/dacdoc.git
+    git remote add origin-pages https://${GITHUB_TOKEN}@github.com/dacdoc/dacdoc.git
     git branch;
     git checkout -b gh-pages;
     git branch --set-upstream-to=origin/gh-pages gh-pages;
