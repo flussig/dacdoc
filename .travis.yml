@@ -23,5 +23,5 @@ install:
     mvn com.github.flussig:dacdoc-maven-plugin:compile;
     git add .;
     git commit -m "release documentation";
-    git push --force;
+    git push --force --set-upstream origin gh-pages;
     fi
