@@ -8,6 +8,7 @@ import com.github.flussig.dacdoc.check.SingleExecutionCheck;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,6 +22,7 @@ class EmployeesAlphaNumericCheck extends SingleExecutionCheck {
     @Override
     public CheckResult performCheck() {
         List<String> lines = Stream.of(argument.split("\n"))
+                .filter(Objects::nonNull)
                 .map(String::trim)
                 .map(s -> s.substring(1))
                 .filter(s -> !s.isEmpty())
