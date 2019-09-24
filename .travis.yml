@@ -15,15 +15,14 @@ env:
 install:
   - if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "gh-pages-development" ]; then
     echo "release github pages";
-    git remote add origin-pages https://${GITHUB_TOKEN}@github.com/dacdoc/dacdoc.git
+    git remote add origin-pages https://${GITHUB_TOKEN}@github.com/flussig/dacdoc.git
     git branch;
     git checkout -b gh-pages;
-    git branch --set-upstream-to=origin/gh-pages gh-pages;
     git pull;
     git reset --hard gh-pages-development;
     mvn clean install;
     mvn com.github.flussig:dacdoc-maven-plugin:compile;
     git add .;
     git commit -m "release documentation";
-    git push --force --set-upstream origin gh-pages;
+    git push --force --set-upstream origin-pages gh-pages;
     fi
