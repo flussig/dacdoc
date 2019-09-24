@@ -18,9 +18,11 @@ class EmployeesAlphaNumericCheck extends SingleExecutionCheck {
         super(argument, file);
     }
 
+    @Override
     public CheckResult performCheck() {
         List<String> lines = Stream.of(argument.split("\n"))
                 .map(String::trim)
+                .map(s -> s.substring(1))
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
 
