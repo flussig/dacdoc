@@ -9,14 +9,12 @@
 
   <name>dacdoc-github-pages</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
+  <properties>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+  </properties>
 
+  <dependencies>
     <dependency>
       <groupId>com.github.flussig</groupId>
       <artifactId>dacdoc-check</artifactId>
