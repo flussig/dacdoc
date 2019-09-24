@@ -20,12 +20,7 @@ Here it is - applied to the following list:
 
 Here's the same check applied to the list with invalid name:
 
-!DACDOC{
-* Jack
-* Joe
-* Simon
-* $triker
-}(test=employeesAlphaNumeric)!
+
 
 Here's another example of advanced tests: **compound checks**. 
 For example, here's the compound check of a table with links. 
