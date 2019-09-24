@@ -7,6 +7,7 @@ branches:
   only:
     - master
     - development
+    - gh-pages-development
 
 env:
   global:
@@ -34,7 +35,7 @@ deploy:
   name: $project_version
 
 install:
-  - if [ ! $TRAVIS_PULL_REQUEST == false ];
+  - if [ ! $TRAVIS_PULL_REQUEST == false ] && [ ! $TRAVIS_BRANCH == "gh-pages-development" ];
     then echo "build and test"; mvn --settings .maven.xml install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V;
     else echo "no build and test for non-PR";
     fi
@@ -44,4 +45,7 @@ install:
     fi
   - if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "development" ];
     then echo "release snapshot"; mvn clean deploy --settings .maven.xml -DskipTests=true -B -U -Prelease;
+    fi
+  - if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "gh-pages-development" ];
+    then echo "release github pages";
     fi
