@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@CheckMetadata(id = "employeesStartWithACheck")
-class EmployeesStartWithACheck extends SingleExecutionCheck {
+@CheckMetadata(id = "employeesAlphaNumeric")
+class EmployeesAlphaNumericCheck extends SingleExecutionCheck {
 
-    public EmployeesStartWithACheck(String argument, File file) {
+    public EmployeesAlphaNumericCheck(String argument, File file) {
         super(argument, file);
     }
 
