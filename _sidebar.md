@@ -1,3 +1,4 @@
 - Getting started
 
-  - [Quick start](quickstart.md)
+  - [Example](docs/example.md)
+  - [Quick start](docs/quickstart.md)
