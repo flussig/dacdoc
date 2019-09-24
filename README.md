@@ -32,7 +32,7 @@ Short instructions to start working with DacDoc:
 4. create documentation files in **.md** format in root folder and subfolders of your project
 5. surround testable fragments of your documentation with placeholder:
    ```markdown
-   !DACDOC{<your testable documentation fragment>}(<parameters>)!
+   ! DACDOC{<your testable documentation fragment>}(<parameters>)!
    ```
    Example of the documentation project can be found [here](./dacdoc-maven-plugin-test). More on the parameters of testable fragment later.
    
