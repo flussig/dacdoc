@@ -16,6 +16,7 @@ install:
     echo "release github pages";
     git branch;
     git checkout -b gh-pages;
+    git branch --set-upstream-to=origin/gh-pages gh-pages;
     git pull;
     git reset --hard gh-pages-development;
     mvn clean install;
