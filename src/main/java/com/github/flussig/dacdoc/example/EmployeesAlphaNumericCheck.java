@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @CheckMetadata(id = "employeesAlphaNumeric")
-class EmployeesAlphaNumericCheck extends SingleExecutionCheck {
+public class EmployeesAlphaNumericCheck extends SingleExecutionCheck {
 
     public EmployeesAlphaNumericCheck(String argument, File file) {
         super(argument, file);
@@ -24,12 +24,10 @@ class EmployeesAlphaNumericCheck extends SingleExecutionCheck {
         List<String> lines = Stream.of(argument.split("\n"))
                 .filter(Objects::nonNull)
                 .map(String::trim)
-                .map(s -> s.substring(1))
                 .filter(s -> !s.isEmpty())
+                .map(s -> s.substring(1))
                 .collect(Collectors.toList());
-
-        System.out.println(lines.size());
-
+        
         CheckStatus checkStatus;
 
         // check that names contain only alphanumeric characters
