@@ -29,7 +29,7 @@ Example (remove spaces before and after exclamation signs):
 ! DACDOC{[my link](./README.md)} !
 ```
 
-Testable fragment is omitted for complex checks (aggregate of multiple check).
+Testable fragment is not required for complex checks (aggregate of multiple check).
 
 ## Parameters
 Parameters for DACDOC annotation are given in parenthesis following curly brackets surrounding tested text fragment.
