@@ -25,6 +25,8 @@ Testable documentation fragments are placed in curly brackets after DACDOC annot
 
 To simplify use of DacDoc plugin for users some common checks are present in `dacdoc-core`. For example, check for 2xx response for url. In case a user wants to check availability of a resource (with absolute and relative paths) they can just surround url in standard markdown format with DACDOC annotation without specifying test name and other parameters.
 Example (remove spaces before and after exclamation signs):
+```markdown
+! DACDOC{[my link](./README.md)} !
 ```
 
 Testable fragment is omitted for complex checks (aggregate of multiple check).
