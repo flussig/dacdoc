@@ -1,3 +1,5 @@
+![quickstart.md](../dacdoc-resources/circle-grey-12px.png "checked on 2021-04-05T16&#058;45&#058;42.888")
+
 ## Quick start
 Short instructions to start working with DacDoc:
 

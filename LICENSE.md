@@ -1,3 +1,5 @@
+![LICENSE.md](dacdoc-resources/circle-grey-12px.png "checked on 2021-04-05T16&#058;45&#058;42.888")
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
